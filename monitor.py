@@ -21,8 +21,10 @@ for i in range(lenn):
     monitorList[name]=list(map(int,file.readline().split(',')))
 file.close()
 
+result=''
 for name in monitorList:
     print('现在开始检查昵称为 '+name+' 的用户的做题情况。')
+    result+='现在开始检查昵称为 '+name+' 的用户的做题情况。\n'
     for uid in monitorList[name]:
         time.sleep(0.1)
         data=getUser(uid)
@@ -32,17 +34,24 @@ for name in monitorList:
             AC=int(user['passedProblemCount'])
         else:
             print('用户编号为 '+str(uid)+' 的用户开启了完全隐私保护。')
+            result+='用户编号为 '+str(uid)+' 的用户开启了完全隐私保护。\n'
             continue
         if os.path.exists(monitorListPath+'\\'+str(uid)+'.txt'):
             file=open(monitorListPath+'\\'+str(uid)+'.txt','r',encoding='utf-8')
             ACL,TryL=map(int,file.readline().split(','))
             file.close()
             print('用户编号为 '+str(uid)+' 的用户距离上次运行监视器，又通过了 '+str(AC-ACL)+' 题，又提交了 '+str(Try-TryL)+' 发代码。')
+            result+='用户编号为 '+str(uid)+' 的用户距离上次运行监视器，又通过了 '+str(AC-ACL)+' 题，又提交了 '+str(Try-TryL)+' 发代码。\n'
             saveData(str(AC)+','+str(Try),monitorListPath,str(uid)+'.txt')
         else:
             saveData(str(AC)+','+str(Try),monitorListPath,str(uid)+'.txt')
             print('用户编号为 '+str(uid)+' 的用户第一次进入卷王监视名单。')
+            result+='用户编号为 '+str(uid)+' 的用户第一次进入卷王监视名单。\n'
     print('\n')
+    result+='\n\n'
+result+=time.asctime()
+saveData(result,'monitor','result.txt')
+print('结果已在 monitor\\result.txt 中保存。')
 # for uid in range(UidStart,UidEnd+1):
 #     data=getUser(uid)
     
